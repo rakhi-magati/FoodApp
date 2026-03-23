@@ -1,0 +1,88 @@
+.payment-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 70vh;
+}
+
+.payment-card {
+  width: 100%;
+  max-width: 500px;
+  padding: 40px;
+  border-radius: 20px;
+  text-align: center;
+}
+
+.payment-title {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: var(--text-main);
+}
+
+.amount-display {
+  background: rgba(255,255,255,0.7);
+  padding: 20px;
+  border-radius: 15px;
+  margin-bottom: 30px;
+}
+
+.amount-display span {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.amount-display h2 {
+  color: var(--primary);
+  font-size: 2.5rem;
+  margin-top: 5px;
+}
+
+.payment-options {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.payment-option {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  border: 2px solid rgba(0,0,0,0.1);
+  border-radius: 15px;
+  cursor: pointer;
+  transition: all 0.3s;
+  background: rgba(255,255,255,0.5);
+}
+
+.payment-option.active {
+  border-color: var(--primary);
+  background: rgba(255, 107, 107, 0.05);
+}
+
+.payment-option input {
+  margin-right: 20px;
+  transform: scale(1.5);
+  accent-color: var(--primary);
+}
+
+.option-content {
+  text-align: left;
+}
+
+.option-content h3 {
+  font-size: 1.1rem;
+  color: var(--text-main);
+  margin-bottom: 5px;
+}
+
+.option-content p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.pay-btn {
+  width: 100%;
+  padding: 15px;
+  font-size: 1.2rem;
+}

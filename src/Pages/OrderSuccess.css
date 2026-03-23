@@ -1,0 +1,67 @@
+.success-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 70vh;
+}
+
+.success-card {
+  width: 100%;
+  max-width: 600px;
+  padding: 50px;
+  border-radius: 20px;
+  text-align: center;
+}
+
+.success-icon-container {
+  margin-bottom: 25px;
+  animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes popIn {
+  0% { transform: scale(0); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.success-icon {
+  font-size: 5rem;
+  color:green;
+}
+
+.success-title {
+  font-size: 2.5rem;
+  color: var(--text-main);
+  margin-bottom: 15px;
+}
+
+.success-message {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+.order-details {
+  background: rgba(255,255,255,0.7);
+  padding: 20px;
+  border-radius: 15px;
+  margin-bottom: 30px;
+  text-align: left;
+  display: inline-block;
+  min-width: 300px;
+}
+
+.order-details p {
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+  color: var(--text-main);
+}
+
+.order-details p:last-child {
+  margin-bottom: 0;
+}
+
+.success-btn {
+  padding: 15px 40px;
+  font-size: 1.1rem;
+}
