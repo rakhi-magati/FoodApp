@@ -31,7 +31,8 @@ const Contact = () => {
         borderRadius: "20px",
         padding: "70px 20px",
         textAlign: "center",
-        color: "#fff",
+        color: "#ffffff",
+        backgroundColor: "rgba(0,0,0,0.5)",
         marginBottom: "60px"
       }}>
         <h1 style={{ fontSize: "3rem" }}>Contact CraveBite 🍽️</h1>
