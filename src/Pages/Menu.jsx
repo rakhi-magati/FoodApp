@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import CategoryFilter from "../Component/CategoryFilter";
 import FoodCard from "../Component/FoodCard";
-import { FaDollarSign, FaStar, FaShoppingCart } from "react-icons/fa";
 
 const Menu = () => {
     const [searchParams] = useSearchParams();
@@ -20,7 +19,21 @@ const Menu = () => {
     const [debouncedSearch, setDebouncedSearch] = useState(searchText);
     const [sortType, setSortType] = useState("");
 
-    // 🔥 Debounce
+    // 🔥 FIXED PRICE FUNCTION (same as Home)
+    const getFixedPrice = (category, id) => {
+        const basePrices = {
+            Chicken: 180,
+            Beef: 220,
+            Seafood: 250,
+            Vegetarian: 120,
+            Dessert: 90,
+            Pasta: 160
+        };
+
+        const base = basePrices[category] || 150;
+        return base + (parseInt(id) % 50);
+    };
+
     useEffect(() => {
         const timer = setTimeout(() => {
             setDebouncedSearch(searchText);
@@ -38,14 +51,15 @@ const Menu = () => {
                 const data = await res.json();
 
                 const meals = data.meals || [];
-
                 const formatted = meals.map((meal) => ({
                     id: meal.idMeal,
                     name: meal.strMeal,
                     description: meal.strInstructions.slice(0, 80),
                     image: meal.strMealThumb,
                     category: meal.strCategory,
-                    price: `$${(Math.floor(Math.random() * 20) + 5).toFixed(2)}`
+
+                    // ✅ FIXED PRICE (no random now)
+                    price: getFixedPrice(meal.strCategory, meal.idMeal)
                 }));
 
                 setAllItems(formatted);
@@ -109,7 +123,6 @@ const Menu = () => {
                 alignItems: "center",
                 justifyContent: "center"
             }}>
-                {/* Overlay */}
                 <div style={{
                     position: "absolute",
                     top: 0,
@@ -120,7 +133,6 @@ const Menu = () => {
                     background: "rgba(0,0,0,0.5)"
                 }}></div>
 
-                {/* Text */}
                 <div style={{
                     position: "relative",
                     color: "#fff",
@@ -209,14 +221,12 @@ const Menu = () => {
                 />
             </div>
 
-            {/* 📊 Result */}
             {!loading && (
                 <p style={{ marginTop: "15px", color: "gray" }}>
                     Showing {items.length} items
                 </p>
             )}
 
-            {/* 🔄 Loader */}
             {loading ? (
                 <div style={{ textAlign: "center", padding: "100px" }}>
                     <div className="spinner"></div>

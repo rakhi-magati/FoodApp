@@ -91,14 +91,14 @@ const Checkout = () => {
             {cart.map((item) => (
               <div key={item.id} className="summary-item">
                 <span>{item.quantity}x {item.name}</span>
-                <span>${(item.price * item.quantity).toFixed(2)}</span>
+                <span>${(Number(item.price) * Number(item.quantity)).toFixed(2)}</span>
               </div>
             ))}
           </div>
           <div className="summary-totals">
             <div className="total-row">
               <span>Subtotal</span>
-              <span>${total.toFixed(2)}</span>
+              <span>${Number(total).toFixed(2)}</span>
             </div>
             <div className="total-row">
               <span>Delivery Fee</span>
@@ -106,7 +106,7 @@ const Checkout = () => {
             </div>
             <div className="total-row grand-total">
               <span>Total</span>
-              <span>${(total + 2.00).toFixed(2)}</span>
+              <span>${(Number(total) + 2.00).toFixed(2)}</span>
             </div>
           </div>
         </div>

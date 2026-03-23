@@ -2,112 +2,182 @@ import { useState, useEffect } from "react";
 import Hero from "../Component/Hero";
 import CategoryFilter from "../Component/CategoryFilter";
 import FoodCard from "../Component/FoodCard";
-import About from "./About";
 import Services from "./Services";
 import Contact from "./Contact";
-import ScrollTop from "../Component/ScrollTop";
 import SupportChat from "../Component/SupportChat";
+import ScrollTop from "../Component/ScrollTop";
 
 const Home = () => {
-  const [meals, setMeals] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [categories, setCategories] = useState(["All"]);
   const [activeCategory, setActiveCategory] = useState("All");
+  const [loading, setLoading] = useState(true);
 
+  const [allItems, setAllItems] = useState([]);
+  const [items, setItems] = useState([]);
+  const [categories, setCategories] = useState([]);
+
+  const [searchText, setSearchText] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [sortType, setSortType] = useState("");
+
+  // 🔁 Debounce
   useEffect(() => {
-    const fetchMeals = async () => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchText);
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [searchText]);
+
+  // 🔥 Smart Price
+  const getSmartPrice = (category) => {
+    const basePrices = {
+      Chicken: 180,
+      Beef: 220,
+      Seafood: 250,
+      Vegetarian: 120,
+      Dessert: 90,
+      Pasta: 160
+    };
+    const base = basePrices[category] || 150;
+    return parseFloat((base + Math.random() * 50).toFixed(0));
+  };
+
+  // ✅ Fetch Data
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
       try {
-        const response = await fetch("https://www.themealdb.com/api/json/v1/1/search.php?s=");
-        if (!response.ok) throw new Error("Failed to fetch data");
-        const data = await response.json();
+        const res = await fetch("https://www.themealdb.com/api/json/v1/1/search.php?s=");
+        const data = await res.json();
 
-        if (data.meals) {
-          const formattedMeals = data.meals.map(meal => ({
-            id: meal.idMeal,
-            name: meal.strMeal,
-            category: meal.strCategory,
-            image: meal.strMealThumb,
-            rating: (Math.random() * 2 + 3).toFixed(1), // 3.0 - 5.0 rating
-            price: `$${(Math.floor(Math.random() * 20) + 5).toFixed(2)}`,
-            description: meal.strInstructions.substring(0, 50) + "..."
-          }));
+        const meals = data.meals || [];
+        const formatted = meals.map((meal) => ({
+          id: meal.idMeal,
+          name: meal.strMeal,
+          description: meal.strInstructions.slice(0, 80),
+          image: meal.strMealThumb,
+          category: meal.strCategory,
+          price: getSmartPrice(meal.strCategory)
+        }));
 
-          setMeals(formattedMeals);
+        setAllItems(formatted);
+        setItems(formatted);
 
-          const uniqueCategories = ["All", ...new Set(formattedMeals.map(m => m.category))];
-          setCategories(uniqueCategories);
-        } else {
-          setMeals([]);
-        }
+        const uniqueCategories = ["All", ...new Set(formatted.map(i => i.category))];
+        setCategories(uniqueCategories);
+
       } catch (err) {
-        setError(err.message);
+        console.error(err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchMeals();
+    fetchData();
   }, []);
 
-  const displayedMeals = activeCategory === "All"
-    ? meals
-    : meals.filter(meal => meal.category === activeCategory);
+  // 🔍 Filter + Sort (Same as Menu)
+  useEffect(() => {
+    if (!allItems.length) return;
+
+    let filtered = [...allItems];
+
+    if (debouncedSearch) {
+      filtered = filtered.filter(item =>
+        item.name.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+        item.description.toLowerCase().includes(debouncedSearch.toLowerCase())
+      );
+    }
+
+    if (activeCategory !== "All") {
+      filtered = filtered.filter(item => item.category === activeCategory);
+    }
+
+    if (sortType === "low") {
+      filtered.sort((a, b) => a.price - b.price);
+    } else if (sortType === "high") {
+      filtered.sort((a, b) => b.price - a.price);
+    }
+
+    setItems(filtered);
+  }, [debouncedSearch, activeCategory, sortType, allItems]);
+
+  const handleReset = () => {
+    setSearchText("");
+    setActiveCategory("All");
+    setSortType("");
+  };
 
   return (
     <div className="home-page">
       <Hero />
 
       <div className="container section">
-        <div style={{ textAlign: "center", marginBottom: "40px" }}>
-          <h2 style={{ fontSize: "2.8rem", marginBottom: "15px" }}>Explore Our <span style={{ color: "var(--primary)" }}>Menu</span></h2>
 
-
-          <CategoryFilter
-            categories={categories}
-            activeCategory={activeCategory}
-            onSelectCategory={setActiveCategory}
+        {/* 🔍 SAME FILTER UI */}
+        <div  style={{
+          display: "flex",
+          gap: "15px",
+          flexWrap: "wrap",
+          justifyContent: "center",
+          marginBottom: "20px"
+        }}>
+          <input
+            className="finput"
+            type="text"
+            placeholder="Search food..."
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
           />
+
+          <select className="sortf" value={sortType} onChange={(e) => setSortType(e.target.value)}>
+            <option value="">Sort</option>
+            <option value="low">Price ↑</option>
+            <option value="high">Price ↓</option>
+          </select>
+
+          <button className="ftbtn" onClick={handleReset}>Reset</button>
         </div>
-        {loading && (
-          <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "300px" }}>
-            <div className="spinner-border text-primary" role="status" style={{ width: '4rem', height: '4rem' }}>
-              <span className="visually-hidden">Loading Menu...</span>
-            </div>
-          </div>
+
+        <CategoryFilter
+          categories={categories}
+          activeCategory={activeCategory}
+          onSelectCategory={setActiveCategory}
+        />
+
+        {/* 📊 Count */}
+        {!loading && (
+          <p style={{ marginTop: "10px", color: "gray" }}>
+            Showing {items.length} items
+          </p>
         )}
 
-        {error && (
-          <div className="alert alert-danger text-center" role="alert">
-            Oops! Error loading the menu: {error}
+        {/* 🔄 Loader */}
+        {loading ? (
+          <div className="text-center p-5">
+            <div className="spinner-border text-primary"></div>
           </div>
-        )}
-
-        {!loading && !error && (
-          <div className="row g-4 page-enter">
-            {displayedMeals.map(item => (
-              <div className="col-12 col-sm-6 col-md-4 col-lg-3 d-flex" key={item.id}>
-
-                <div style={{ width: '100%' }}>
-                  <FoodCard item={item} />
-                </div>
+        ) : (
+          <div className="row g-4 mt-2">
+            {items.map(item => (
+              <div key={item.id} className="col-12 col-sm-6 col-md-4 col-lg-3">
+                <FoodCard item={item} />
               </div>
             ))}
-            {displayedMeals.length === 0 && (
-              <div className="col-12 text-center text-muted p-5">
-                <h4>No items found in this category.</h4>
+
+            {items.length === 0 && (
+              <div className="text-center p-5">
+                <h3>No items found 😢</h3>
               </div>
             )}
           </div>
         )}
       </div>
-      <div>
-        {/* <About /> */}
-        <Services />
-        <Contact />
-        <SupportChat/>
-        <ScrollTop/>
-      </div>
+
+      {/* Extra Sections */}
+      <Services />
+      <Contact />
+      <SupportChat />
+      <ScrollTop />
     </div>
   );
 };
