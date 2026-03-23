@@ -1,6 +1,8 @@
 import "./Footer.css";
 import { Link } from "react-router-dom";
 import { FaFacebookF, FaInstagram, FaTwitter, FaLinkedinIn } from "react-icons/fa";
+import SupportChat from "./SupportChat";
+import ScrollTop from "./ScrollTop";
 
 const Footer = () => {
   return (
@@ -46,6 +48,8 @@ const Footer = () => {
               <li>123 Food Street, Yum City</li>
             </ul>
           </div>
+          <SupportChat />
+          <ScrollTop/>
 
         </div>
 

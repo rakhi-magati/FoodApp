@@ -17,6 +17,7 @@ const FoodCard = ({ item }) => {
       },
     });
   };
+  
 
   return (
     <div className="food-card glass">
@@ -33,7 +34,7 @@ const FoodCard = ({ item }) => {
         </div>
         <p className="card-desc">{item.description}</p>
         <div className="card-footer">
-          <span className="card-price">₹{item.price}</span>
+          <span className="card-price">${item.price}</span>
           <button
             className="btn btn-primary btn-icon"
             onClick={handleAddToCart}
