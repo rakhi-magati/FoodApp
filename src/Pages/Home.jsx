@@ -5,6 +5,8 @@ import FoodCard from "../Component/FoodCard";
 import About from "./About";
 import Services from "./Services";
 import Contact from "./Contact";
+import ScrollTop from "../Component/ScrollTop";
+import SupportChat from "../Component/SupportChat";
 
 const Home = () => {
   const [meals, setMeals] = useState([]);
@@ -103,6 +105,8 @@ const Home = () => {
         {/* <About /> */}
         <Services />
         <Contact />
+        <SupportChat/>
+        <ScrollTop/>
       </div>
     </div>
   );

@@ -15,10 +15,9 @@ const Navbar = () => {
     <header className="glass-nav">
       <div className="container nav-top">
         <Link to="/" className="logo">
-          <span>🍽️</span> Crave<span>Bite</span>
+          <span><img src="/src/assets/Crave Bite.png" style={{width:"100px" ,}} alt="" /></span> Crave<span>Bite</span>
         </Link>
 
-        {/* Desktop Links */}
         <nav className="nav-links desktop-only">
           <NavLink to="/" className={({isActive}) => isActive ? "nav-link active" : "nav-link"}>Home</NavLink>
           <NavLink to="/about" className={({isActive}) => isActive ? "nav-link active" : "nav-link"}>About</NavLink>
@@ -38,7 +37,6 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
       {isOpen && (
         <div className="mobile-menu glass page-enter">
           <div className="mobile-links">
