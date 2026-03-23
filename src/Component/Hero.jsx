@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FiArrowRight, FiChevronLeft, FiChevronRight } from "react-icons/fi";
-import { foodItems } from "../data/foodData";
+// import { foodItems } from "../data/foodData";
 import "./Hero.css";
+import { foodItems } from "../Data/Fooddata";
 
 const Hero = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
